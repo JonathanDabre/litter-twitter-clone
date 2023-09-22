@@ -1,4 +1,7 @@
-import React from 'react'
+import useCurrentUser from '@/hooks/useCurrentUser';
+import useLoginModal from '@/hooks/useLoginModal';
+import { useRouter } from 'next/router';
+import React, { useCallback } from 'react'
 import {IconType} from 'react-icons'
 
 //Prop type declaration. "?" indicates optional prop.
@@ -7,6 +10,7 @@ interface SidebarItemProps {
     href?: string;
     icon: IconType;
     onClick?: ()=>void;
+    auth?: boolean;
 
 }
 
@@ -18,11 +22,32 @@ const SidebarItem: React.FC<SidebarItemProps> = (
         label,
         href,
         icon: Icon,
-        onClick
+        onClick,
+        auth
     } 
 ) => {
+
+    const loginModal = useLoginModal();
+    const {data: currentUser} = useCurrentUser();
+    const router = useRouter();
+    const handleClick = useCallback(()=>{
+        if(onClick){
+            return onClick();
+        }
+
+        // If auth is protected(not logged in) and we don't have any user.
+        if(auth && !currentUser){
+            loginModal.onOpen();
+
+        } else if(href){
+            router.push(href)
+        }
+
+    }, [router, onClick, href, currentUser, auth, loginModal])
+
+
   return (
-    <div className="flex flex-row items-center">
+    <div onClick={handleClick} className="flex flex-row items-center">
         <div className="relative rounded-full h-14 w-14 flex items-center justify-center p-4 hover:bg-blue-300 hover:bg-opacity-10 cursor-pointer lg:hidden ">
             <Icon size={28} color='white'/>
         </div>
