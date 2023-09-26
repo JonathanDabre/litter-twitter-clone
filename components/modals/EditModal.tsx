@@ -16,7 +16,7 @@ const EditModal = () => {
     const {mutate: mutateFetchedUser} = useUser(currentUser?.id);
     const editModal = useEditModal();
 
-    const [profileImage, setProfileImage] = useState("");
+    const [profileImage, setProfileImage] = useState('');
     const [coverImage, setCoverImage] = useState("");
     const [name, setName] = useState("");
     const [username, setUsername] = useState("");
@@ -28,7 +28,7 @@ const EditModal = () => {
         setName(currentUser?.name)
         setUsername(currentUser?.username)
         setBio(currentUser?.bio)
-    }, [currentUser])
+    }, [currentUser?.name, currentUser?.username, currentUser?.bio, currentUser?.profileImage, currentUser?.coverImage])
 
     const [isLoading, setIsLoading] = useState(false);
 
@@ -38,6 +38,8 @@ const EditModal = () => {
             console.log("00")
             setIsLoading(true);
             console.log("000")
+
+            console.log(name, username, bio, profileImage, coverImage)
 
             await axios.patch('/api/edit', {
                 name, 

@@ -13,14 +13,14 @@ export default async function handler(
 
     try {
         // server will get user from the session.
-        const { currentUser } = await serverAuth(req)
+        const { currentUser } = await serverAuth(req, res)
 
         const {name, username, bio,  profileImage, coverImage } = req.body;
-
+        console.log("hi")
         if(!name || !username ){
             throw new Error('Missing fields')
         }
-
+       
         const updatedUser = await prisma.user.update({
             where:{
                 id: currentUser.id
